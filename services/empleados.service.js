@@ -71,15 +71,22 @@ class EmpleadosService {
             return rta;
     };
     async update(id, body){
-        const hash = await bcrypt.hash(body.password, 12);
         const data = await models.Empleados.findByPk(id);
         if (!data) {
             throw boom.notFound('Elemento no encontrado');
         } else {
-            const bodyUpdate ={
-                ...body,
-                password: hash
-            };
+            let bodyUpdate ={}
+            if (body.password) {
+                const hash = await bcrypt.hash(body.password, 12);
+                bodyUpdate ={
+                    ...body,
+                    password: hash
+                };
+            }else {
+                bodyUpdate={
+                    ...body,
+                };
+            }
             let condition = { where: {id_empleado: id} };
             await models.Empleados.update(bodyUpdate, condition);
             return true;
