@@ -58,7 +58,8 @@ class VentasService {
     }
 
     async findChart(){
-        const rta = await models.Ventas.sequelize.query(`SELECT COUNT(*) AS cantidad, TO_CHAR(date_trunc('month', ventas.fecha), 'MM') AS mes, SUM(ventas.precio_total) as total
+        const rta = await models.Ventas.sequelize.query(`SELECT COUNT(*) AS cantidad, TO_CHAR(date_trunc('month', ventas.fecha), 'MM') AS mes,
+        SUM(ventas.precio_total) as total
         FROM ventas
         GROUP BY mes ORDER BY mes DESC LIMIT 6 OFFSET 0;`);
         if (rta[0].length <= 0) {
