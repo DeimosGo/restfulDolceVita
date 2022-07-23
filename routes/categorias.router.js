@@ -1,19 +1,22 @@
 const express = require('express');
 const CategoriaService = require('../services/categorias.service');
 const validatorHandler = require('../middlewares/validator.handler');
-const { checkRoles } = require('../middlewares/auth.handler');
+const {
+    checkRoles
+} = require('../middlewares/auth.handler');
 const {
     createCategoriaSchema,
     updateCategoriaSchema,
     getCategoriaSchema,
-    queryCategoriaSchema
+    queryCategoriaSchema,
+    getNameCategoriaSchema
 } = require('../schemas/categorias.schema')
 
 const router = express.Router();
 const service = new CategoriaService();
 
-router.get('/', checkRoles([1,2]),
-validatorHandler(queryCategoriaSchema, 'query'),
+router.get('/', checkRoles([1, 2]),
+    validatorHandler(queryCategoriaSchema, 'query'),
     async (request, response, next) => {
         try {
             const categorias = await service.find(request.query);
@@ -23,8 +26,21 @@ validatorHandler(queryCategoriaSchema, 'query'),
         }
     });
 
-router.get('/:id_categoria', checkRoles([1,2]),
-validatorHandler(getCategoriaSchema, 'params'),
+    router.get('/count', checkRoles([1, 2]),
+validatorHandler(queryCategoriaSchema, 'query'),
+async (request, response, next) => {
+    try {
+        const cantidad = await service.count();
+        response.status(200).json({cantidad:cantidad});
+    } catch (error) {
+        console.log(error);
+        next(error);
+    }
+}
+);
+
+router.get('/:id_categoria', checkRoles([1, 2]),
+    validatorHandler(getCategoriaSchema, 'params'),
     async (request, response, next) => {
         const {
             id_categoria
@@ -37,8 +53,21 @@ validatorHandler(getCategoriaSchema, 'params'),
         }
     });
 
+    router.get('/name/:nombre', checkRoles([1, 2]),
+    validatorHandler(getNameCategoriaSchema, 'params'),
+    async (request, response, next) => {
+        const { nombre } = request.params;
+        try {
+            const respuesta = await service.findName(nombre);
+            response.status(200).json(respuesta);
+        } catch (error) {
+            next(error);
+        }
+    });
+
+
 router.post('/', checkRoles([1]),
-validatorHandler(createCategoriaSchema, 'body'),
+    validatorHandler(createCategoriaSchema, 'body'),
     async (requets, response, next) => {
         const body = requets.body;
         try {
@@ -52,7 +81,7 @@ validatorHandler(createCategoriaSchema, 'body'),
     });
 
 router.patch('/:id', checkRoles([1]),
-validatorHandler(getCategoriaSchema, 'params'),
+    validatorHandler(getCategoriaSchema, 'params'),
     validatorHandler(updateCategoriaSchema, 'body'),
     async (request, response, next) => {
         try {
@@ -71,7 +100,7 @@ validatorHandler(getCategoriaSchema, 'params'),
     });
 
 router.delete('/:id', checkRoles([1]),
-validatorHandler(getCategoriaSchema, 'params'),
+    validatorHandler(getCategoriaSchema, 'params'),
     async (request, response, next) => {
         try {
             const {

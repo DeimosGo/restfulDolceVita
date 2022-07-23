@@ -30,7 +30,7 @@ async (request, response, next) =>{
     };
 });
 
-router.post('/', checkRoles([1]),
+router.post('/', checkRoles([1,2]),
 validatorHandler(createComprobante, 'body'),
 async (request, response, next) => {
     try {

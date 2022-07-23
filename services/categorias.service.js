@@ -1,5 +1,7 @@
 const boom = require('@hapi/boom');
 const { models } = require('../libs/sequelize');
+const sequelize = require('sequelize');
+const Op = sequelize.Op;
 
 class  CategoriasService {
     constructor() {};
@@ -8,9 +10,33 @@ class  CategoriasService {
         return true;
     };
 
+    async count(){
+        const cantidad = await models.Categorias.count({
+            where:{
+            deleted: false
+        }
+    });
+        return cantidad;
+    }
+
+    async findName(name){
+        const nameCategoria = name;
+        const rta = await models.Categorias.findAll({
+            where: {
+                deleted: false,
+                "nombreCategoria": {
+                    [Op.like]: `%${nameCategoria.toUpperCase()}%`
+                }
+            }
+        });
+        return rta;
+    };
+
     async find(query){
         const { limit, offset } = query;
-        const options = {}
+        const options = {where:{
+            deleted: false,
+        }}
         if (limit && offset) {
             options.limit = limit;
             options.offset = offset;
@@ -21,6 +47,9 @@ class  CategoriasService {
     };
     async findOne(id){
         const data = await models.Categorias.findByPk(id, {
+            where:{
+                deleted: false
+            },
             include: 'productos'
         });
         if (!data) {
@@ -33,7 +62,7 @@ class  CategoriasService {
         if (!data) {
             throw boom.notFound('Elemento no encontrado');
         } else {
-            var condition = { where :{id_categoria: id} };
+            let condition = { where :{id_categoria: id} };
             await models.Categorias.update(body, condition);
             return true;
         }
@@ -43,7 +72,8 @@ class  CategoriasService {
         if (!data) {
             throw boom.notFound('Elemento no encontrado');
         } else {
-            data.destroy(data);
+            let condition = { where :{id_categoria: id} };
+            await models.Categorias.update({deleted: true}, condition);
             return true;
         }
     };

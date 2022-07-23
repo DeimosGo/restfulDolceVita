@@ -3,23 +3,33 @@ const idVenta = Joi.number().positive().integer();
 const precioTotal = Joi.number().positive();
 const fecha = Joi.date().format('YYYY-MM-DD').utc();
 const idEmpleado = Joi.number().positive();
+const deleted = Joi.boolean();
 const limit = Joi.number().positive().integer();
 const offset = Joi.number().positive().integer();
+const dateIn = Joi.date().format('YYYY-MM-DD').utc();
+const dateOut = Joi.date().format('YYYY-MM-DD').utc();
 
 const createVentaSchema = Joi.object({
     precioTotal: precioTotal.required(),
-    fecha: fecha.required(),
-    idEmpleado: idEmpleado.required()
+    fecha: fecha,
+    idEmpleado: idEmpleado.required(),
+    deleted: deleted
 });
 
 const updateVentaSchema = Joi.object({
     precioTotal: precioTotal,
     fecha: fecha,
-    idEmpleado: idEmpleado
+    idEmpleado: idEmpleado,
+    deleted: deleted
 });
 
 const getVentaSchema = Joi.object({
     idVenta: idVenta.required()
+});
+
+const rangeVenta = Joi.object({
+    dateIn: dateIn.required(),
+    dateOut: dateOut.required(),
 });
 
 const queryVentaSchema = Joi.object({
@@ -27,4 +37,4 @@ const queryVentaSchema = Joi.object({
     offset
 });
 
-module.exports = { createVentaSchema, updateVentaSchema, getVentaSchema ,queryVentaSchema };
+module.exports = { createVentaSchema, rangeVenta, updateVentaSchema, getVentaSchema ,queryVentaSchema };

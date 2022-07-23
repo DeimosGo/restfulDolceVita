@@ -7,6 +7,7 @@ const precio = Joi.number().precision(2);
 const stock = Joi.number().min(0).max(9999);
 const cantidad_ventas = Joi.number().min(0).max(99999);
 const id_categoria = Joi.number().min(0).max(999999);
+const deleted = Joi.boolean();
 const limit = Joi.number().positive().integer();
 const offset = Joi.number().positive().integer();
 
@@ -17,6 +18,7 @@ const createProductoSchema = Joi.object({
     stock: stock.required(),
     cantidadVentas: cantidad_ventas.required(),
     idCategoria: id_categoria.required(),
+    deleted: deleted
 });
 
 const updateProductoSchema = Joi.object({
@@ -26,6 +28,7 @@ const updateProductoSchema = Joi.object({
     stock: stock,
     cantidadVentas: cantidad_ventas,
     idCategoria: id_categoria,
+    deleted: deleted
 });
 
 const getProductoSchema = Joi.object({
@@ -45,4 +48,4 @@ const queryProductoSchema = Joi.object({
     offset
 });
 
-module.exports = { createProductoSchema, updateProductoSchema, getProductoSchema, queryProductoSchema, getNameProductoSchema, getProductoCategoriaSchema };
+module.exports = {createProductoSchema, updateProductoSchema, getProductoSchema, queryProductoSchema, getNameProductoSchema, getProductoCategoriaSchema };

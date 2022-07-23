@@ -18,6 +18,17 @@ async (request, response, next) =>{
     }
 });
 
+router.get('/count', checkRoles([1,2]),
+validatorHandler(queryEmpleadoSchema, 'query'),
+async (request, response, next) => {
+    try {
+        const cantidad = await service.count();
+        response.status(200).json({cantidad: cantidad});
+    } catch (error) {
+        next(error);
+    }
+});
+
 router.get('/:id', checkRoles([1]),
 validatorHandler(getEmpleadoSchema, 'params'),
 async (request, response, next) =>{
@@ -28,6 +39,18 @@ async (request, response, next) =>{
     } catch (error) {
         next(error);
     };
+});
+
+router.get('/name/:name', checkRoles([1,2]),
+validatorHandler(getEmpleadoSchema, 'params'),
+async (request, response, next) => {
+    try {
+        const { name } = request.params;
+        const respuesta = await service.findName(name);
+        response.status(200).json(respuesta);
+    } catch (error) {
+        next(error);
+    }
 });
 
 router.post('/', checkRoles([1]),

@@ -9,6 +9,7 @@ const email = Joi.string().email();
 const password = Joi.string().min(12);
 const activo = Joi.boolean();
 const idRol = Joi.number().positive().integer();
+const deleted = Joi.boolean();
 const limit = Joi.number().positive().integer();
 const offset = Joi.number().positive().integer();
 
@@ -20,7 +21,8 @@ const createEmpleadoSchema = Joi.object({
     email: email.required(),
     password: password.required(),
     activo: activo.required(),
-    idRol: idRol.required()
+    idRol: idRol.required(),
+    deleted: deleted
 });
 
 const updateEmpleadoSchema = Joi.object({
@@ -31,7 +33,8 @@ const updateEmpleadoSchema = Joi.object({
     email: email,
     password: password,
     activo: activo,
-    idRol: idRol
+    idRol: idRol,
+    deleted: deleted
 });
 
 const getEmpleadoSchema = Joi.object({
@@ -44,4 +47,4 @@ const queryEmpleadoSchema = Joi.object({
 });
 
 
-module.exports = { createEmpleadoSchema, updateEmpleadoSchema, getEmpleadoSchema, queryEmpleadoSchema };
+module.exports = {createEmpleadoSchema, updateEmpleadoSchema, getEmpleadoSchema, queryEmpleadoSchema };

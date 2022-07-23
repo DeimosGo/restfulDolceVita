@@ -1,3 +1,4 @@
+const sequelize = require('sequelize');
 const { Model, DataTypes }= require('sequelize');
 const { EMPLEADOS } = require('./empleados.models');
 
@@ -18,7 +19,8 @@ const VentasSchema = {
     },
     fecha: {
         allowNull: false,
-        type:  DataTypes.DATEONLY
+        type:  DataTypes.DATEONLY,
+        defaultValue: sequelize.NOW,
     },
     idEmpleado: {
         field: 'id_empleado',
@@ -30,6 +32,11 @@ const VentasSchema = {
         },
         onUpdate: 'CASCADE',
         onDelete: 'SET NULL'
+    },
+    deleted:{
+        allowNull: false,
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
     }
 }
 

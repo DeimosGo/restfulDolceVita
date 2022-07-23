@@ -54,6 +54,11 @@ const EmpleadosSchema = {
         },
         onUpdate: 'CASCADE',
         onDelete: 'SET NULL'
+    },
+    deleted:{
+        allowNull: false,
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
     }
 };
 

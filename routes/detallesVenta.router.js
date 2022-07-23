@@ -13,6 +13,18 @@ async (request, response) =>{
     response.status(200).json(ventas);
 });
 
+router.get('/details/:id', checkRoles([1,2]),/*
+validatorHandler(getDetallesVentaSchema, 'params'), */
+async (request, response, next) =>{
+    try {
+        const {id} = request.params;
+        const respuesta = await service.findDetalles(id);
+        response.status(200).json(respuesta);
+    } catch (error) {
+        next(error);
+    };
+});
+
 router.get('/:id', checkRoles([1,2]),
 validatorHandler(getDetallesVentaSchema, 'params'),
 async (request, response, next) =>{

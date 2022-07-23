@@ -16,7 +16,7 @@ const updateDetallesVentaSchema = Joi.object({
     idProducto: idProducto
 });
 const getDetallesVentaSchema = Joi.object({
-    idDetalleVenta: idDetalleVenta
+    idDetalleVenta: idDetalleVenta.required(),
 });
 
 module.exports = { createDetallesVentaSchema, updateDetallesVentaSchema, getDetallesVentaSchema };

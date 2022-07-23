@@ -19,7 +19,11 @@ const CategoriasSchema = {
     descripcion: {
         allowNull: false,
         type: DataTypes.TEXT,
-
+    },
+    deleted:{
+        allowNull: false,
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
     }
 };
 

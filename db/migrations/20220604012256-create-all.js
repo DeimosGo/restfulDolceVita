@@ -13,7 +13,7 @@ const { DetallesComprobanteSchema, DETALLESCOMPROBANTE } = require('../models/de
 module.exports = {
     async up (queryInterface) {
         await queryInterface.createTable(CATEGORIAS, CategoriasSchema);
-        await queryInterface.createTable(CLIENTES, ClientesSchema);
+        /* await queryInterface.createTable(CLIENTES, ClientesSchema); */
         await queryInterface.createTable(ROLES, RolesSchema);
         await queryInterface.createTable(PRODUCTOS, ProductosSchema);
         await queryInterface.createTable(EMPLEADOS, EmpleadosSchema);
@@ -25,7 +25,7 @@ module.exports = {
 
     async down (queryInterface) {
         await queryInterface.dropTable(CATEGORIAS);
-        await queryInterface.dropTable(CLIENTES);
+        /* await queryInterface.dropTable(CLIENTES); */
         await queryInterface.dropTable(ROLES);
         await queryInterface.dropTable(PRODUCTOS);
         await queryInterface.dropTable(EMPLEADOS);

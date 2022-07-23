@@ -14,7 +14,9 @@ async (request, response, next) =>{
             sub: usuario.id,
             rol:usuario.idRol
         };
-        const token = jwt.sign(payload, config.jwtSecret);
+        const token = jwt.sign(payload, config.jwtSecret, {
+            expiresIn: '8h'
+        });
         response.status(200).json({
             usuario,
             token

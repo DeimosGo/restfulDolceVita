@@ -5,14 +5,17 @@ const dniCliente = Joi.number().min(11111111).max(99999999);
 const nombreCliente = Joi.string().min(3).max(200);
 const fecha = Joi.date().format('YYYY-MM-DD').utc();
 const totalVenta = Joi.number().positive();
+const deleted = Joi.boolean();
 const limit = Joi.number().positive().integer();
 const offset = Joi.number().positive().integer();
 
 const createComprobante = Joi.object({
+    idComprobante: idComprobante.required(),
     dniCliente: dniCliente.required(),
     nombreCliente: nombreCliente.required(),
     fecha: fecha.required(),
-    totalVenta: totalVenta.required()
+    totalVenta: totalVenta.required(),
+    deleted: deleted
 });
 
 const updateComprobante = Joi.object({
@@ -20,7 +23,8 @@ const updateComprobante = Joi.object({
     dniCliente: dniCliente,
     nombreCliente: nombreCliente,
     fecha: fecha,
-    totalVenta: totalVenta
+    totalVenta: totalVenta,
+    deleted: deleted,
 });
 
 const getComprobante = Joi.object({

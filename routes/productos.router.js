@@ -24,6 +24,40 @@ async (request, response, next) => {
     }
 });
 
+router.get('/chart', checkRoles([1,2]),
+validatorHandler(queryProductoSchema, 'query'),
+async (request, response, next) => {
+    try {
+        const productos = await service.findChart(request.query);
+        response.status(200).json(productos);
+    } catch (error) {
+        next(error);
+    }
+});
+
+
+router.get('/venta', checkRoles([1,2]),
+async (request, response, next) => {
+    try {
+        const productos = await service.findForVenta();
+        response.status(200).json(productos);
+    } catch (error) {
+        next(error);
+    }
+});
+
+router.get('/venta/:name', checkRoles([1,2]),
+validatorHandler(getNameProductoSchema, 'params'),
+async (request, response, next) => {
+    try {
+        const { name } = request.params;
+        const productos = await service.findNameVenta(name);
+        response.status(200).json(productos);
+    } catch (error) {
+        next(error);
+    }
+});
+
 router.get('/count', checkRoles([1,2]),
 validatorHandler(queryProductoSchema, 'query'),
 async (request, response, next) => {

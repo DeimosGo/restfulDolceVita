@@ -6,7 +6,6 @@ const ComprobantesVentaSchema = {
     idComprobante:{
         field: 'id_comprobante',
         allowNull: false,
-        autoIncrement: true,
         primaryKey: true,
         type: DataTypes.INTEGER
     },
@@ -28,6 +27,11 @@ const ComprobantesVentaSchema = {
         field: 'total_venta',
         allowNull: false,
         type: DataTypes.DECIMAL(10, 2)
+    },
+    deleted:{
+        allowNull: false,
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
     }
 };
 

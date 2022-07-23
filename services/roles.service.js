@@ -9,7 +9,11 @@ class RolesService {
     }
     async find(query){
         const { limit, offset } = query;
-        const options = {};
+        const options = {
+            where:{
+                deleted: false
+            }
+        };
         if (limit && offset) {
             options.limit = limit;
             options.offset = offset;
@@ -19,6 +23,7 @@ class RolesService {
     }
     async findOne(id){
         const rta = await models.Roles.findByPk(id, {
+            deleted: false,
             include: ['empleados']
         });
         if (!rta) {
@@ -42,7 +47,8 @@ class RolesService {
         if (!data) {
             throw boom.notFound('Elemento no encontrado');
         } else {
-            data.destroy(data);
+            let  condition = { where: { id_rol: id } };
+            await models.Roles.update({deleted: true}, condition);
             return true;
         }
     }

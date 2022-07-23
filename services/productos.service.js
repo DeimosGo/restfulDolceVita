@@ -9,7 +9,11 @@ class ProductoService {
         this.products = [];
     }
     async count(){
-        const cantidad = await models.Productos.count();
+        const cantidad = await models.Productos.count({
+            where:{
+                deleted: false
+            }
+    });
         return cantidad;
     }
     async create(body) {
@@ -18,7 +22,11 @@ class ProductoService {
     };
     async find(query){
         const { limit, offset } = query;
-        const options = {};
+        const options = {
+            where:{
+                deleted: false
+            },
+        };
         if (limit && offset) {
             options.limit = limit;
             options.offset = offset;
@@ -26,11 +34,65 @@ class ProductoService {
         const rta = await models.Productos.findAll(options);
         return rta;
     };
+
+    async findChart(query){
+        const { limit, offset } = query;
+        const options = {
+            where:{
+                deleted: false
+            },
+            order: [
+                ['cantidadVentas', 'DESC'],
+            ]
+        };
+        if (limit && offset) {
+            options.limit = limit;
+            options.offset = offset;
+        }
+        const rta = await models.Productos.findAll(options);
+        return rta;
+    };
+
+    async findForVenta(){
+        const options = {
+            where:{
+            deleted: false,
+            'stock':{
+                [Op.gt] : 0
+            }
+        },
+        order: [
+            ['cantidadVentas', 'DESC'],
+        ],
+    };
+            options.limit = 5;
+            options.offset = 0;
+        const rta = await models.Productos.findAll(options);
+        return rta;
+    };
+    async findNameVenta(name){
+        const options = {
+            where:{
+            deleted: false,
+            'stock':{
+                [Op.gt] : 0
+            },
+            "nombreProducto": {
+                [Op.like]: `%${name.toUpperCase()}%`
+            }
+        }};
+        const rta = await models.Productos.findAll(options);
+        if (rta.length <= 0) {
+            throw boom.notFound('Elemento no encontrado');
+        } else {
+            return rta;
+        };
+    };
     async findName(name){
         const nameProducto = name;
-        console.log(nameProducto);
         const rta = await models.Productos.findAll({
             where: {
+                deleted: false,
                 "nombreProducto": {
                     [Op.like]: `%${nameProducto.toUpperCase()}%`
                 }
@@ -44,12 +106,17 @@ class ProductoService {
         const rta = await models.Productos.findAll({
             where: {
                 "idCategoria": idCategoria,
+                deleted: false
             }
         });
         return rta;
     };
     async findOne(id){
-        const data = await models.Productos.findByPk(id);
+        const data = await models.Productos.findByPk(id,{
+            where:{
+                deleted: false
+            }
+        });
         if (!data) {
             throw boom.notFound('Producto no encontrado');
         }
@@ -70,7 +137,8 @@ class ProductoService {
         if (!data) {
             throw boom.notFound('Elemento no encontrado');
         } else {
-            data.destroy(data);
+            let  condition = { where: { id_producto: id } };
+            await models.Productos.update({deleted: true}, condition);
             return true;
         }
     };

@@ -1,6 +1,8 @@
 const boom = require('@hapi/boom');
 const { models } = require('../libs/sequelize');
 const bcrypt = require('bcrypt');
+const sequelize = require('sequelize');
+const Op = sequelize.Op;
 
 class EmpleadosService {
     constructor(){};
@@ -13,9 +15,20 @@ class EmpleadosService {
         return true;
     };
 
+    async count(){
+        const cantidad = await models.Empleados.count({
+            where:{
+                deleted: false
+            }
+    });
+        return cantidad;
+    }
+
     async find(query){
         const { limit, offset } = query;
-        const options = {};
+        const options = {where:{
+            deleted: false
+        }};
         if (limit && offset) {
             options.limit = limit;
             options.offset = offset;
@@ -25,6 +38,9 @@ class EmpleadosService {
     };
     async findOne(id){
         const rta = await models.Empleados.findByPk(id, {
+            where:{
+                deleted: false
+            },
             include: ['ventas']
         });
         if (!rta) {
@@ -33,21 +49,39 @@ class EmpleadosService {
             return rta;
         };
     };
+    async findName(name){
+        const nameEmpleado = name;
+        const rta = await models.Empleados.findAll({
+            where: {
+                deleted: false,
+                "nombres": {
+                    [Op.like]: `%${nameEmpleado.toUpperCase()}%`
+                }
+            }
+        });
+        return rta;
+    };
     async findEmail(email){
         const rta = await models.Empleados.findOne({
             where: {
-                email: email
+                email: email,
+                deleted: false
             }
         });
             return rta;
     };
     async update(id, body){
+        const hash = await bcrypt.hash(body.password, 12);
         const data = await models.Empleados.findByPk(id);
         if (!data) {
             throw boom.notFound('Elemento no encontrado');
         } else {
+            const bodyUpdate ={
+                ...body,
+                password: hash
+            };
             let condition = { where: {id_empleado: id} };
-            await models.Empleados.update(body, condition);
+            await models.Empleados.update(bodyUpdate, condition);
             return true;
         };
     }
@@ -56,7 +90,8 @@ class EmpleadosService {
         if (!data) {
             throw boom.notFound('Elemento no encontrado');
         } else {
-            data.destroy(data);
+            let condition = { where: {id_empleado: id} };
+            await models.Empleados.update({deleted: true}, condition);
             return true;
         }
     }

@@ -4,14 +4,18 @@ const {
     getVentaSchema,
     createVentaSchema,
     updateVentaSchema,
-    queryVentaSchema
+    queryVentaSchema,
+    rangeVenta
 } = require('../schemas/ventas.schema');
 const validatorHandler = require('../middlewares/validator.handler');
+const {
+    checkRoles
+} = require('../middlewares/auth.handler');
 
 const router = express.Router();
 const service = new VentasService();
 
-router.get('/', validatorHandler(queryVentaSchema, 'query'),
+router.get('/', checkRoles([1, 2]), validatorHandler(queryVentaSchema, 'query'),
     async (request, response, next) => {
         try {
             const ventas = await service.find(request.query);
@@ -22,7 +26,56 @@ router.get('/', validatorHandler(queryVentaSchema, 'query'),
 
     });
 
-router.get('/:id', validatorHandler(getVentaSchema, 'params'),
+router.get('/employes/:fechaIn/:fechaOut', checkRoles([1, 2]),
+    async (request, response, next) => {
+        try {
+            const {
+                fechaIn,
+                fechaOut
+            } = request.params;
+            const rta = await service.findEmpleados(fechaIn, fechaOut);
+            response.status(200).json(rta);
+        } catch (error) {
+            next(error);
+        }
+    });
+
+router.get('/semester', checkRoles([1, 2]),
+    async (request, response, next) => {
+        try {
+            const rta = await service.findChart();
+            response.status(200).json(rta);
+        } catch (error) {
+            next(error);
+        }
+    });
+
+router.get('/raw', checkRoles([1, 2]), validatorHandler(queryVentaSchema, 'query'),
+    async (request, response, next) => {
+        try {
+            const ventas = await service.findMain(request.query);
+            response.status(200).json(ventas);
+        } catch (error) {
+            next(error);
+        }
+
+    });
+
+router.get('/date', checkRoles([1, 2]), validatorHandler(rangeVenta, 'body'),
+    async (request, response, next) => {
+        try {
+            const {
+                dateIn,
+                dateOut
+            } = request.body;
+            const rta = await service.findRange(dateIn, dateOut);
+            response.status(200).json(rta);
+        } catch (error) {
+            next(error);
+        }
+    });
+
+router.get('/:id', checkRoles([1, 2]), validatorHandler(getVentaSchema, 'params'),
     async (request, response, next) => {
         try {
             const {
@@ -35,20 +88,19 @@ router.get('/:id', validatorHandler(getVentaSchema, 'params'),
         };
     });
 
-router.post('/', validatorHandler(createVentaSchema, 'body'),
+
+router.post('/', checkRoles([1, 2]), validatorHandler(createVentaSchema, 'body'),
     async (request, response, next) => {
         try {
             const body = request.body;
             const rta = await service.create(body);
-            response.status(201).json({
-                created: rta
-            });
+            response.status(201).json(rta);
         } catch (error) {
             next(error);
         }
     });
 
-router.patch('/:id', validatorHandler(getVentaSchema, 'params'),
+router.patch('/:id', checkRoles([1]), validatorHandler(getVentaSchema, 'params'),
     validatorHandler(updateVentaSchema, 'body'),
     async (request, response, next) => {
         try {
@@ -65,7 +117,7 @@ router.patch('/:id', validatorHandler(getVentaSchema, 'params'),
         }
     });
 
-router.delete('/:id', validatorHandler(getVentaSchema, 'params'),
+router.delete('/:id', checkRoles([1]), validatorHandler(getVentaSchema, 'params'),
     async (request, response, next) => {
         try {
             const {
