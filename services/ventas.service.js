@@ -9,6 +9,15 @@ class VentasService {
         return rta;
     };
 
+    async count(){
+        const cantidad = await models.Ventas.count({
+            where:{
+                deleted: false
+            }
+    });
+        return cantidad;
+    }
+
     async find(query){
         const { limit, offset } = query;
         const options = {

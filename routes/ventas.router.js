@@ -26,6 +26,17 @@ router.get('/', checkRoles([1, 2]), validatorHandler(queryVentaSchema, 'query'),
 
     });
 
+router.get('/count', checkRoles([1,2]),
+validatorHandler(queryVentaSchema, 'query'),
+async (request, response, next) => {
+    try {
+        const cantidad = await service.count();
+        response.status(200).json({cantidad: cantidad});
+    } catch (error) {
+        next(error);
+    }
+});
+
 router.get('/employes/:fechaIn/:fechaOut', checkRoles([1, 2]),
     async (request, response, next) => {
         try {
