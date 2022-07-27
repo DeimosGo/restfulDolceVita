@@ -72,7 +72,7 @@ router.get('/raw', checkRoles([1, 2]), validatorHandler(queryVentaSchema, 'query
 
     });
 
-router.get('/date', checkRoles([1, 2]), validatorHandler(rangeVenta, 'body'),
+router.post('/date', checkRoles([1, 2]), validatorHandler(rangeVenta, 'body'),
     async (request, response, next) => {
         try {
             const {
@@ -82,6 +82,7 @@ router.get('/date', checkRoles([1, 2]), validatorHandler(rangeVenta, 'body'),
             const rta = await service.findRange(dateIn, dateOut);
             response.status(200).json(rta);
         } catch (error) {
+            console.error(error);
             next(error);
         }
     });

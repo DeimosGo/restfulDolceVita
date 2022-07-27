@@ -77,22 +77,19 @@ class VentasService {
             return rta[0];
         }
     }
-
+    //SELECT * from ventas_rango( '2022-07-26', '2022-08-01');
     async findRange(dateIn, dateOut){
-        const firstDate = dateIn;
-        const lastDate = dateOut;
-        const rta = await models.Ventas.findAll({
-            where: {
-                deleted: false,
-                "fecha": {
-                    [Op.between]: [firstDate, lastDate]
+        const rta = await models.Ventas.sequelize.query(`SELECT * from ventas_rango(:fechaIn, :fechaOut);`,
+        {
+            replacements: {
+                fechaIn: dateIn, fechaOut: dateOut,
                 }
-            }
         });
-        if (rta.length <= 0) {
+        console.log(rta[0]);
+        if (rta[0].length <= 0) {
             throw boom.notFound('Elemento no encontrado');
         } else {
-            return rta;
+            return rta[0];
         }
     };
 
