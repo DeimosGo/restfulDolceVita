@@ -26,6 +26,18 @@ router.get('/', checkRoles([1, 2]), validatorHandler(queryVentaSchema, 'query'),
 
     });
 
+    router.get('/empleado/:id', checkRoles([1, 2]),
+    async (request, response, next) => {
+        try {
+            const { id } = request.params;
+            const ventas = await service.findByEmpleado(id);
+            response.status(200).json(ventas);
+        } catch (error) {
+            next(error);
+        }
+
+    });
+
 router.get('/count', checkRoles([1,2]),
 validatorHandler(queryVentaSchema, 'query'),
 async (request, response, next) => {

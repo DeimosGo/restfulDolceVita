@@ -52,6 +52,22 @@ class VentasService {
         }
     }
 
+    //SELECT * from list_venta_empleado_id(6);
+
+    async findByEmpleado(id){
+        const rta = await models.Ventas.sequelize.query('SELECT * from list_venta_empleado_id(:idEmpleado);',
+        {
+            replacements: {
+                idEmpleado: id,
+                }
+        });
+        if (rta[0].length <= 0) {
+            throw boom.notFound('Elemento no encontrado');
+        } else {
+            return rta[0];
+        }
+    }
+
     async findEmpleados(dateIn, dateOut){
         const rta = await models.Ventas.sequelize.query('SELECT * from ventas_empleado(:fechain, :fechaout);',
         {

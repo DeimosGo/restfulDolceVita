@@ -4,7 +4,6 @@ const boomErrorHandler = (error, request, response, next) => {
     if (error.isBoom) {
         const {output} = error;
         response.status(output.statusCode).json(output.payload);
-        console.log(output);
     } else {
         next(error);
     }
