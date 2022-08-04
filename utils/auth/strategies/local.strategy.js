@@ -12,7 +12,10 @@ const LocalStrategy = new Strategy({
         const user = await service.findEmail(email);
         if (!user) {
             done(boom.unauthorized('No autorizado'), false);
-        } else {
+        } else if (!user.activo) {
+            done(boom.forbidden('No activo'), false);
+        }
+        else {
             const match = await verifyPassword(password, user.password);
             if (!match) {
                 done(boom.unauthorized('No autorizado'), false);

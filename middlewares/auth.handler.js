@@ -13,7 +13,6 @@ const checkApiKey = (request, response, next) => {
 const checkRoles = (roles) => {
     return (request, response, next) => {
         const user = request.user;
-        console.log(user.rol);
         if (roles.includes(user.rol)) {
             next();
         } else {
