@@ -29,7 +29,7 @@ async (request, response, next) => {
     }
 });
 
-router.get('/:id', checkRoles([1]),
+router.get('/:id', checkRoles([1,2]),
 validatorHandler(getEmpleadoSchema, 'params'),
 async (request, response, next) =>{
     try {
