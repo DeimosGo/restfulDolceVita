@@ -78,7 +78,9 @@ io.on('connection', socket =>{
         socket.broadcast.emit(
             'server:adviceNewVenta',
             `${datos.nombres[0]}${datos.nombres.toLowerCase().substring(1)} ${datos.apellidos[0]}${datos.apellidos.toLowerCase().substring(1)}`);
+        socket.broadcast.emit('server:countVentas');
     });
+
 });
 
 /* app.listen(port, ()=>{
