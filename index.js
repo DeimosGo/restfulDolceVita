@@ -43,7 +43,7 @@ io.on('connection', socket =>{
             }
             setTimeout(()=>{
                 socket.emit('logout');
-            }, 120000);
+            }, 900000);
         }
     });
     socket.on('cliente:registerProduct', (datos)=>{
