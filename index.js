@@ -42,8 +42,10 @@ io.on('connection', socket =>{
                     socket.emit('server:warLogin', 'La sesion expirara en 2 minutos');
                 });
                 socket.timeout(900000).emit('use', (err, res) => {
+                    if (data.sesion) {
                     servicio.dispose(data.idEmpleado);
                     socket.emit('logout');
+                    }
                 });
             } else {
                 usuario.rol = 'vendedor';
@@ -52,30 +54,12 @@ io.on('connection', socket =>{
                     socket.emit('server:warLogin', 'La sesion expirara en 2 minutos');
                 });
                 socket.timeout(900000).emit('use', (err, res) => {
-                    servicio.dispose(data.idEmpleado);
-                    socket.emit('logout');
+                    if (data.sesion) {
+                        servicio.dispose(data.idEmpleado);
+                        socket.emit('logout');
+                        }
                 });
             }
-            /* if (data.idRol === 1) {
-                usuario.rol = 'administrador';
-                socket.broadcast.emit('loginUser', usuario);
-                socket.timeout(780000).emit('serv', (err, res)=>{
-                    socket.emit('server:warLogin', 'La sesion expirara en 2 minutos');
-                });
-                socket.timeout(900000).emit('use', (err, res) => {
-                    socket.emit('logout');
-                });
-            } else {
-                usuario.rol = 'vendedor';
-                socket.broadcast.emit('loginUser', usuario);
-                socket.timeout(780000).emit('serv', (err, res)=>{
-                    socket.emit('server:warLogin', 'La sesion expirara en 2 minutos');
-                });
-                socket.timeout(900000).emit('use', (err, res) => {
-                    servicio.changeSesion(data.idEmpleado);
-                    socket.emit('logout');
-                });
-            } */
         }
     });
     socket.on('cliente:closeSesion', (id)=>{
