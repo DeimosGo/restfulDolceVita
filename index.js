@@ -37,10 +37,9 @@ io.on('connection', socket =>{
             if (data.idRol === 1) {
                 usuario.rol = 'administrador';
                 socket.broadcast.emit('loginUser', usuario);
-                socket.timeout(60000).emit('logout', (err) => {
-                    if (err) {
-                        console.log('hubo un error');
-                    }});
+                socket.timeout(60000).emit('use', (err) => {
+                    socket.emit('logout');
+                });
             } else {
                 usuario.rol = 'vendedor';
                 socket.broadcast.emit('loginUser', usuario);
