@@ -4,7 +4,8 @@ const { Server } = require('socket.io');
 const cors = require('cors');
 const routerApi = require('./routes');
 const { boomErrorHandler, errorHandler, ormErrorHandler } = require('./middlewares/error.handler');
-
+const EmpleadosService = require('./services/empleados.service');
+const servicio = new EmpleadosService();
 const app = express();
 
 app.use(express.json());
@@ -37,6 +38,26 @@ io.on('connection', socket =>{
             if (data.idRol === 1) {
                 usuario.rol = 'administrador';
                 socket.broadcast.emit('loginUser', usuario);
+                socket.timeout(30000).emit('serv', (err, res)=>{
+                    socket.emit('server:warLogin', 'La sesion expirara en 2 minutos');
+                });
+                socket.timeout(30000).emit('use', (err, res) => {
+                    socket.emit('logout');
+                });
+            } else {
+                usuario.rol = 'vendedor';
+                socket.broadcast.emit('loginUser', usuario);
+                socket.timeout(30000).emit('serv', (err, res)=>{
+                    socket.emit('server:warLogin', 'La sesion expirara en 2 minutos');
+                });
+                socket.timeout(30000).emit('use', (err, res) => {
+                    servicio.changeSesion(data.idEmpleado);
+                    socket.emit('logout');
+                });
+            }
+            /* if (data.idRol === 1) {
+                usuario.rol = 'administrador';
+                socket.broadcast.emit('loginUser', usuario);
                 socket.timeout(780000).emit('serv', (err, res)=>{
                     socket.emit('server:warLogin', 'La sesion expirara en 2 minutos');
                 });
@@ -50,9 +71,10 @@ io.on('connection', socket =>{
                     socket.emit('server:warLogin', 'La sesion expirara en 2 minutos');
                 });
                 socket.timeout(900000).emit('use', (err, res) => {
+                    servicio.changeSesion(data.idEmpleado);
                     socket.emit('logout');
                 });
-            }
+            } */
         }
     });
     socket.on('cliente:registerProduct', (datos)=>{
