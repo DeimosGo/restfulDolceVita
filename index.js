@@ -44,11 +44,9 @@ io.on('connection', socket =>{
             } else {
                 usuario.rol = 'vendedor';
                 socket.broadcast.emit('loginUser', usuario);
-                socket.timeout(60000).emit('logout', (err) => {
-                    if (err) {
-                        console.log('hubo un error');
-                        console.log(err);
-                    }});
+                socket.timeout(60000).emit('use', (err) => {
+                    socket.emit('logout');
+                });
             }
         }
     });
