@@ -5,8 +5,8 @@ class ComprobantesVentaService {
     constructor (){};
 
     async create(body){
-        await models.ComprobantesVentas.create(body);
-        return true;
+        const rta = await models.ComprobantesVentas.create(body);
+        return rta;
     };
 
     async find(query){

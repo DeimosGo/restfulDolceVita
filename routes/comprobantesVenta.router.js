@@ -36,7 +36,7 @@ async (request, response, next) => {
     try {
         const body = request.body;
         const rta = await service.create(body);
-        response.status(201).json({created:rta});
+        response.status(201).json(rta);
     } catch (error) {
         next(error);
     }
