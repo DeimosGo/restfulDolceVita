@@ -37,7 +37,7 @@ io.on('connection', socket =>{
             if (data.idRol === 1) {
                 usuario.rol = 'administrador';
                 socket.broadcast.emit('loginUser', usuario);
-                socket.timeout(780000).emit('logged', (err, res)=>{
+                socket.timeout(780000).emit('serv', (err, res)=>{
                     socket.emit('server:warLogin', 'La sesion expirara en 2 minutos');
                 });
                 socket.timeout(900000).emit('use', (err, res) => {
@@ -46,7 +46,7 @@ io.on('connection', socket =>{
             } else {
                 usuario.rol = 'vendedor';
                 socket.broadcast.emit('loginUser', usuario);
-                socket.timeout(780000).emit('logged', (err, res)=>{
+                socket.timeout(780000).emit('serv', (err, res)=>{
                     socket.emit('server:warLogin', 'La sesion expirara en 2 minutos');
                 });
                 socket.timeout(900000).emit('use', (err, res) => {
