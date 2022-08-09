@@ -19,8 +19,12 @@ const LocalStrategy = new Strategy({
             const match = await verifyPassword(password, user.password);
             if (!match) {
                 throw boom.unauthorized('No autorizado'), false;
-            } else {
+            } else if(user.sesion){
+                console.log('Sesion');
+                done(boom.locked('sesion'), false);
+            }else {
                 delete user.dataValues.password;
+                service.changeSesion(user.idEmpleado);
                 return done(null, user);
             }
         }

@@ -10,6 +10,7 @@ const password = Joi.string().min(12);
 const activo = Joi.boolean();
 const idRol = Joi.number().positive().integer();
 const deleted = Joi.boolean();
+const sesion = Joi.boolean();
 const limit = Joi.number().positive().integer();
 const offset = Joi.number().positive().integer();
 
@@ -22,7 +23,8 @@ const createEmpleadoSchema = Joi.object({
     password: password.required(),
     activo: activo.required(),
     idRol: idRol.required(),
-    deleted: deleted
+    deleted: deleted,
+    sesion: sesion
 });
 
 const updateEmpleadoSchema = Joi.object({
@@ -34,7 +36,8 @@ const updateEmpleadoSchema = Joi.object({
     password: password,
     activo: activo,
     idRol: idRol,
-    deleted: deleted
+    deleted: deleted,
+    sesion:sesion
 });
 
 const getEmpleadoSchema = Joi.object({

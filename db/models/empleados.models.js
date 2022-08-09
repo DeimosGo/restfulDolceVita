@@ -59,6 +59,11 @@ const EmpleadosSchema = {
         allowNull: false,
         type: DataTypes.BOOLEAN,
         defaultValue: false,
+    },
+    sesion:{
+        allowNull: false,
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
     }
 };
 

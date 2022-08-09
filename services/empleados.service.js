@@ -102,5 +102,15 @@ class EmpleadosService {
             return true;
         }
     }
+    async changeSesion(id){
+        const data = await models.Empleados.findByPk(id);
+        if (!data) {
+            throw boom.notFound('Elemento no encontrado');
+        } else {
+            let condition = { where: {id_empleado: id} };
+            await models.Empleados.update({sesion: !data.sesion}, condition);
+            return !data.sesion;
+        }
+    }
 }
 module.exports=EmpleadosService;
