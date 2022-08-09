@@ -41,7 +41,7 @@ io.on('connection', socket =>{
                 usuario.rol = 'vendedor';
                 socket.broadcast.emit('loginUser', usuario);
             }
-            setTimeout(socket.emit('logout'), 900000);
+            socket.timeout(120000).emit('logout');
         }
     });
     socket.on('cliente:registerProduct', (datos)=>{
