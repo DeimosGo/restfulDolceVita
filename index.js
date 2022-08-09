@@ -47,6 +47,7 @@ io.on('connection', socket =>{
                 socket.timeout(60000).emit('logout', (err) => {
                     if (err) {
                         console.log('hubo un error');
+                        console.log(err);
                     }});
             }
         }
