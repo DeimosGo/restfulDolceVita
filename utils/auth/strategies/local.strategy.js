@@ -11,14 +11,14 @@ const LocalStrategy = new Strategy({
     try {
         const user = await service.findEmail(email);
         if (!user) {
-            done(boom.unauthorized('No autorizado'), false);
+            throw boom.unauthorized('No autorizado'), false;
         } else if (!user.activo) {
             done(boom.forbidden('No activo'), false);
         }
         else {
             const match = await verifyPassword(password, user.password);
             if (!match) {
-                done(boom.unauthorized('No autorizado'), false);
+                throw boom.unauthorized('No autorizado'), false;
             } else {
                 delete user.dataValues.password;
                 return done(null, user);
