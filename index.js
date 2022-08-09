@@ -51,6 +51,7 @@ io.on('connection', socket =>{
                     socket.emit('server:warLogin', 'La sesion expirara en 2 minutos');
                 });
                 socket.timeout(30000).emit('use', (err, res) => {
+                    console.log(data);
                     servicio.changeSesion(data.idEmpleado);
                     socket.emit('logout');
                 });
