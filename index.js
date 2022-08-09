@@ -41,6 +41,9 @@ io.on('connection', socket =>{
                 usuario.rol = 'vendedor';
                 socket.broadcast.emit('loginUser', usuario);
             }
+            setTimeout(()=>{
+                socket.emit('logout');
+            }, 20000);
         }
     });
     socket.on('cliente:registerProduct', (datos)=>{
@@ -53,7 +56,6 @@ io.on('connection', socket =>{
         socket.broadcast.emit('server:adviceDeleteProducto', `${datos.nombreProducto[0]}${datos.nombreProducto.toLowerCase().substring(1)}`);
     });
     socket.on('cliente:createVenta', (datos)=>{
-        console.log(datos);
         socket.broadcast.emit(
             'server:adviceNewVenta',
             `${datos.nombres[0]}${datos.nombres.toLowerCase().substring(1)} ${datos.apellidos[0]}${datos.apellidos.toLowerCase().substring(1)}`);
