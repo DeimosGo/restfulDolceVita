@@ -42,10 +42,8 @@ io.on('connection', socket =>{
                     socket.emit('server:warLogin', 'La sesion expirara en 2 minutos');
                 });
                 socket.timeout(900000).emit('use', (err, res) => {
-                    if (data.sesion) {
                     servicio.dispose(data.idEmpleado);
                     socket.emit('logout');
-                    }
                 });
             } else {
                 usuario.rol = 'vendedor';
@@ -54,10 +52,8 @@ io.on('connection', socket =>{
                     socket.emit('server:warLogin', 'La sesion expirara en 2 minutos');
                 });
                 socket.timeout(900000).emit('use', (err, res) => {
-                    if (data.sesion) {
                         servicio.dispose(data.idEmpleado);
                         socket.emit('logout');
-                        }
                 });
             }
         }
