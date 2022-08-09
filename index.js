@@ -38,21 +38,21 @@ io.on('connection', socket =>{
             if (data.idRol === 1) {
                 usuario.rol = 'administrador';
                 socket.broadcast.emit('loginUser', usuario);
-                socket.timeout(30000).emit('serv', (err, res)=>{
+                socket.timeout(780000).emit('serv', (err, res)=>{
                     socket.emit('server:warLogin', 'La sesion expirara en 2 minutos');
                 });
-                socket.timeout(30000).emit('use', (err, res) => {
+                socket.timeout(900000).emit('use', (err, res) => {
+                    servicio.dispose(data.idEmpleado);
                     socket.emit('logout');
                 });
             } else {
                 usuario.rol = 'vendedor';
                 socket.broadcast.emit('loginUser', usuario);
-                socket.timeout(30000).emit('serv', (err, res)=>{
+                socket.timeout(780000).emit('serv', (err, res)=>{
                     socket.emit('server:warLogin', 'La sesion expirara en 2 minutos');
                 });
-                socket.timeout(30000).emit('use', (err, res) => {
-                    console.log(data);
-                    servicio.changeSesion(data.idEmpleado);
+                socket.timeout(900000).emit('use', (err, res) => {
+                    servicio.dispose(data.idEmpleado);
                     socket.emit('logout');
                 });
             }
@@ -77,6 +77,9 @@ io.on('connection', socket =>{
                 });
             } */
         }
+    });
+    socket.on('cliente:closeSesion', (id)=>{
+        servicio.dispose(id);
     });
     socket.on('cliente:registerProduct', (datos)=>{
         socket.broadcast.emit('server:adviceProducto', `${datos.nombreProducto[0]}${datos.nombreProducto.toLowerCase().substring(1)}`);
