@@ -57,9 +57,10 @@ router.get('/employes/:fechaIn/:fechaOut', checkRoles([1, 2]),
                 fechaOut
             } = request.params;
             const rta = await service.findEmpleados(fechaIn, fechaOut);
+            console.log('res', rta);
             response.status(200).json(rta);
         } catch (error) {
-            next(error);
+            response.status(404).send(error);
         }
     });
 

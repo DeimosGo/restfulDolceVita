@@ -76,6 +76,7 @@ class VentasService {
                 }
         });
         if (rta[0].length <= 0) {
+            console.log(rta[0]);
             throw boom.notFound('Elemento no encontrado');
         } else {
             return rta[0];
