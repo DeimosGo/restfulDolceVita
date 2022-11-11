@@ -16,7 +16,7 @@ app.use(ormErrorHandler);
 app.use(boomErrorHandler);
 app.use(errorHandler);
 app.get('/', (request, response)=>{
-    response.sendFile(__dirname+'/prueba.html');
+    response.sendFile(__dirname+'/static/index.html');
 })
 const httpServer = createServer(app);
 const io = new Server(httpServer, {
